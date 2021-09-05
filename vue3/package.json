@@ -1,0 +1,24 @@
+{
+  "name": "chainmemo",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "eth-sig-util": "^3.0.1",
+    "minifyify": "^7.3.5",
+    "vue": "^3.0.4",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.4",
+    "vite": "^1.0.0-rc.13"
+  },
+  "description": "frontend for chainmemo",
+  "main": "index.js",
+  "repository": "https://github.com/chainmemo/chainmemo",
+  "author": "wangkui0508 <wangkui0508@hotmail.com>",
+  "license": "MIT",
+  "private": false
+}
