@@ -5,7 +5,8 @@
     <hr/>
     <template v-for="(entry, sn) in memos" :keys="entry.timestamp">
       <b>#{{sn+1}}<code>&nbsp;&nbsp;{{entry.timestamp}}&nbsp;&nbsp;</code></b>
-      <button @click="remove" v-bind:id="entry.id" style="font-size:20px; width: 80px;">remove</button>
+      <button @click="remove" v-bind:id="entry.id" v-bind:name="entry.content"
+      style="font-size:20px; width: 80px;">remove</button>
       <br/>
       <p>{{entry.content}}</p><br/>
     </template>
@@ -66,14 +67,17 @@ export default {
       newMemos.sort(function(a,b) {
         return a.timestamp < b.timestamp
       })
-      this.memos = newMemos.reverse()
+      this.memos = newMemos
     },
     async remove(event) {
       if (typeof window.ethereum === 'undefined') {
         alertNoWallet()
         return
       }
-      alert("To remove "+event.target.id)
+      const ok = confirm("Are you sure to remove \""+event.target.name+"\"")
+      if(!ok) {
+        return
+      }
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const signer = provider.getSigner()
       const myMemoAddress = getMyContract(await signer.getAddress())
@@ -82,9 +86,12 @@ export default {
         alertNoMemos()
         return
       }
-      //const gasPrice = await provider.getStorageAt("0x0000000000000000000000000000000000002710","0x00000000000000000000000000000000000000000000000000000000000000002")
+      var gasPrice = await provider.getStorageAt("0x0000000000000000000000000000000000002710","0x00000000000000000000000000000000000000000000000000000000000000002")
+      if(gasPrice=="0x") {
+        gasPrice = "0x0"
+      }
       const memoContract = new ethers.Contract(myMemoAddress, MemoABI, provider)
-      await memoContract.connect(signer).deleteMemo(event.target.id)// {gasPrice: gasPrice}
+      await memoContract.connect(signer).deleteMemo(event.target.id, {gasPrice: gasPrice})
     }
   }
 }

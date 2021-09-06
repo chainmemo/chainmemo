@@ -41,7 +41,7 @@ async function deploy(bytecode) {
     const receipt = await contract.deployTransaction.wait();
     console.log(receipt)
   } catch(e) {
-    alert("Error! "+e)
+    alert("Error! "+e.toString())
   }
 }
 
@@ -93,17 +93,19 @@ export default {
       const signer = provider.getSigner()
       const myMemoAddress = getMyContract(await signer.getAddress())
       const code = await provider.getCode(myMemoAddress)
-      //const gasPrice = await provider.getStorageAt("0x0000000000000000000000000000000000002710","0x00000000000000000000000000000000000000000000000000000000000000002")
       //const encoder = new TextEncoder()
       //const fullMemo = encoder.encode((new Date()).toISOString() + " " + this.memo)
       const fullMemo = await encryptMsg((new Date()).toISOString() + " " + this.memo)
+      var gasPrice = await provider.getStorageAt("0x0000000000000000000000000000000000002710","0x00000000000000000000000000000000000000000000000000000000000000002")
+      if(gasPrice=="0x") {
+        gasPrice = "0x0"
+      }
       if(code.length <= 2) { //contract not created
-        alert("memo did not init, now init")
         const facContract = new ethers.Contract(FactoryAddress, FactoryABI, provider)
-        const receipt = await facContract.connect(signer).create(fullMemo) //{gasPrice: gasPrice}
+        const receipt = await facContract.connect(signer).create(fullMemo, {gasPrice: gasPrice})
       } else {
         const memoContract = new ethers.Contract(myMemoAddress, MemoABI, provider)
-        await memoContract.connect(signer).addMemo(fullMemo)// {gasPrice: gasPrice}
+        await memoContract.connect(signer).addMemo(fullMemo, {gasPrice: gasPrice}) 
       }
     },
   }
