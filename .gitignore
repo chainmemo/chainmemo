@@ -4,3 +4,4 @@ solidity/build
 *.swp
 *.log
 vue3/public/ethers-5.4.6.umd.min.js
+browserify/node_modules

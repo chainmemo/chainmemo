@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "eth-sig-util": "^3.0.1",
+    "minifyify": "^7.3.5"
+  }
+}

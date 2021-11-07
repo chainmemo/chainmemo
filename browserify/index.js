@@ -35,6 +35,15 @@ window.encodeObjAsHex = function(obj) {
   return '0x' + buf.toString('hex')
 }
 
+window.getEncryptionPublicKeyFromPrivKey = function(privKey) {
+  return sigUtil.getEncryptionPublicKey(privKey)
+}
+
+window.decryptEncObjWithPrivKey = function(encryptedData, privateKey) {
+  return sigUtil.decrypt(encryptedData, privateKey)
+}
+
+
 window.encryptMsgWithKey = function(msg, encryptionPublicKey) {
   const obj = sigUtil.encrypt(encryptionPublicKey, {data: msg}, 'x25519-xsalsa20-poly1305')
   nonce = base64ToHex(obj.nonce)
